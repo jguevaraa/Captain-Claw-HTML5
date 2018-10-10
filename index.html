@@ -34,14 +34,15 @@
                 update: update
             }
         };
-        
+
         var game = new Phaser.Game(config);
-        
+
         function preload () {
             this.load.tilemapTiledJSON('map', 'assets/demo1/demo1.json');
             this.load.spritesheet('tiles', 'assets/demo1/demo1.png', {frameWidth: 64, frameHeight: 64});
             //this.load.spritesheet('tiles', 'assets/demo1/demo1.png', { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
             this.load.atlas('CLAW', 'assets/claw/CLAW.png', 'assets/claw/CLAW.json');
+            this.load.spritesheet('COIN', 'assets/coin/coin.png', { frameWidth: 28, frameHeight: 29 });
             this.load.audio('DEMO1_MUSIC', 'assets/demo1/demo1.mp3');
         }
         
@@ -77,16 +78,23 @@
                 repeat: -1
             });
 
-             this.anims.create({
+            this.anims.create({
                 key: 'run',
                 frames: this.anims.generateFrameNames('CLAW',
                     {prefix: 'CLAW_', start: 1, end: 10}),
                 frameRate: 10
             });
 
+            this.anims.create({
+                key: 'coins',
+                frames: this.anims.generateFrameNumbers('COIN', { start: 0, end: 8 }),
+                frameRate: 11
+            });
+
             //MUSIC
             this.music = this.sound.add("DEMO1_MUSIC");
             this.music.play();
+
         }
         
         function update (time, delta) {
@@ -110,6 +118,7 @@
                     player.body.setVelocityY(-400); // jump up
                 }
         }
+
         </script>
   </body>  
 </html>
