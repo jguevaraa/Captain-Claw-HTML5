@@ -1,6 +1,9 @@
+        var background;
+        
         function preload () {
             this.load.tilemapTiledJSON('map', 'assets/demo1/demo1.json');
             this.load.spritesheet('tiles', 'assets/demo1/demo1.png', {frameWidth: 64, frameHeight: 64});
+            this.load.image('background', 'assets/demo1/demo1_background.png');
             //this.load.spritesheet('tiles', 'assets/demo1/demo1.png', { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
             this.load.atlas('CLAW', 'assets/claw/CLAW.png', 'assets/claw/CLAW.json');
             this.load.spritesheet('COIN', 'assets/coin/coin.png', { frameWidth: 28, frameHeight: 29 });
@@ -8,6 +11,7 @@
         }
         
         function create () {
+            background = this.add.tileSprite(0, 0, 12000, 12000, "background");
             // load the map 
             map = this.make.tilemap({key: 'map'});
             // tiles for the ground layer
@@ -21,15 +25,17 @@
             this.physics.world.bounds.height = groundLayer.height;
             // create the player sprite    
             player = this.physics.add.sprite(400, 2800, 'CLAW'); 
+            this.physics.add.existing(player, false);
             player.setBounce(0.2); // our player will bounce from items
             player.setCollideWorldBounds(true); // don't go out of the map
+            player.body.setSize(32, 65, 0, 0); //(width, height, x, y)
             this.physics.add.collider(groundLayer, player);
             // set bounds so the camera won't go outside the game world
             this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
             // make the camera follow the player
             this.cameras.main.startFollow(player);
             // set background color, so the sky is not black    
-            this.cameras.main.setBackgroundColor('#000000'); 
+            //this.cameras.main.setBackgroundColor('#000000'); 
 
             this.anims.create({
                 key: 'idle',
@@ -65,11 +71,13 @@
                     player.setVelocityX(-270);
                     player.flipX = true;
                     player.anims.play('run', true);
+                    background.tilePositionX -= 1;
                     
                 }else if (cursors.right.isDown) {
                     player.setVelocityX(270);
                     player.flipX = false;
                     player.anims.play('run', true);
+                    background.tilePositionX += 1;
                 }else {
                     player.setVelocityX(0);
                     player.anims.play('idle', true);
